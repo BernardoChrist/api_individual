@@ -1,6 +1,7 @@
 package com.residencia.biblioteca.entities;
 
 import java.util.Date;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 //o entity é utilizado para a informar que essa classe é uma entidade - é obrigatório
@@ -34,14 +36,14 @@ public class Livro {
 		private Date dataLancamento;
 
 		@Column(name = "codigoisbn")
-		private Integer codigoIsbn ;
-
-		@Column(name = "codigoeditora")
-		private Integer codigoEditora;
+		private Integer codigoIsbn;
 		
 		@ManyToOne //muitos livros para 1 editora
 		@JoinColumn(name = "codigoeditora", referencedColumnName = "codigoeditora")
 		private Editora editora;
+		
+		@OneToMany(mappedBy = "livro") //1 livro para muitos emprestimos
+		private List<Emprestimo> emprestimo;
 
 		public Integer getCodigoLivro() {
 			return codigoLivro;
@@ -81,22 +83,6 @@ public class Livro {
 
 		public void setCodigoIsbn(Integer codigoIsbn) {
 			this.codigoIsbn = codigoIsbn;
-		}
-
-		public Integer getCodigoEditora() {
-			return codigoEditora;
-		}
-
-		public void setCodigoEditora(Integer codigoEditora) {
-			this.codigoEditora = codigoEditora;
-		}
-
-		public Editora getEditora() {
-			return editora;
-		}
-
-		public void setEditora(Editora editora) {
-			this.editora = editora;
 		}
 
 }

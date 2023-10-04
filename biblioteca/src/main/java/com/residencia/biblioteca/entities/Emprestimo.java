@@ -33,6 +33,10 @@ public class Emprestimo {
 
 	@Column(name = "codigolivro")
 	private Integer codigoLivro;
+	
+	@ManyToOne //muitos emprestimos para 1 livro
+	@JoinColumn(name = "codigolivro", referencedColumnName = "codigolivro")
+	private Livro livro;
 
 	@Column(name = "dataemprestimo")
 	private Date dataEmprestimo;
@@ -42,7 +46,8 @@ public class Emprestimo {
 
 	@Column(name = "valoremprestimo")
 	private BigDecimal valorEmprestimo;
-
+	
+	
 	public Integer getCodigoEmprestimo() {
 		return codigoEmprestimo;
 	}
