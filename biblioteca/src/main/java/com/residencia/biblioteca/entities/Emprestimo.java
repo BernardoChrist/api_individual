@@ -30,9 +30,6 @@ public class Emprestimo {
 	// estrangeira, E o reference no banco, vai ser o referencedname
 	private Aluno aluno; // temos que instanciar aluno da sua classe, isso irá puxar todos os dados dos
 							// alunos
-
-	@Column(name = "codigolivro")
-	private Integer codigoLivro;
 	
 	@ManyToOne //muitos emprestimos para 1 livro
 	@JoinColumn(name = "codigolivro", referencedColumnName = "codigolivro")
@@ -54,14 +51,6 @@ public class Emprestimo {
 
 	public void setCodigoEmprestimo(Integer codigoEmprestimo) {
 		this.codigoEmprestimo = codigoEmprestimo;
-	}
-
-	public Integer getCodigoLivro() {
-		return codigoLivro;
-	}
-
-	public void setCodigoLivro(Integer codigoLivro) {
-		this.codigoLivro = codigoLivro;
 	}
 
 	public Date getDataEmprestimo() {
@@ -94,6 +83,14 @@ public class Emprestimo {
 
 	public void setAluno(Aluno aluno) {
 		this.aluno = aluno;
+	}
+
+	public Livro getLivro() {
+		return livro;
+	}
+
+	public void setLivro(Livro livro) {
+		this.livro = livro;
 	}
 
 }

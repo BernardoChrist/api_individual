@@ -43,7 +43,7 @@ public class Livro {
 		private Editora editora;
 		
 		@OneToMany(mappedBy = "livro") //1 livro para muitos emprestimos
-		private List<Emprestimo> emprestimo;
+		private List<Emprestimo> emprestimos;
 
 		public Integer getCodigoLivro() {
 			return codigoLivro;
@@ -83,6 +83,22 @@ public class Livro {
 
 		public void setCodigoIsbn(Integer codigoIsbn) {
 			this.codigoIsbn = codigoIsbn;
+		}
+
+		public Editora getEditora() {
+			return editora;
+		}
+
+		public void setEditora(Editora editora) {
+			this.editora = editora;
+		}
+
+		public List<Emprestimo> getEmprestimos() {
+			return emprestimos;
+		}
+
+		public void setEmprestimos(List<Emprestimo> emprestimos) {
+			this.emprestimos = emprestimos;
 		}
 
 }
