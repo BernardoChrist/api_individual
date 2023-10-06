@@ -34,7 +34,7 @@ public class EmprestimoService {
 		return emprestimoRepo.save(novoEmprestimo); // o .save ja vai salvar
 	}
 
-	public Emprestimo atualizarEditora(Emprestimo atualizaEmprestimo) {
+	public Emprestimo atualizarEmprestimo(Emprestimo atualizaEmprestimo) {
 		return emprestimoRepo.save(atualizaEmprestimo);
 	}
 

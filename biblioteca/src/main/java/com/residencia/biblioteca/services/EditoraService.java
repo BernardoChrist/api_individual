@@ -26,8 +26,8 @@ public class EditoraService {
 	}
 
 	// criando metodo de recuperar editora pela chave primária
-	public Editora buscarEditoraPorId(Integer codigoeditora) { // integer pq é o tipo da chave primária de Editora
-		return editoraRepo.findById(codigoeditora).get(); // utilizamos o getbyid optional, depois o .get para
+	public Editora buscarEditoraPorId(Integer codigoEditora) { // integer pq é o tipo da chave primária de Editora
+		return editoraRepo.findById(codigoEditora).get(); // utilizamos o getbyid optional, depois o .get para
 																// retornar uma editora.
 	}
 

@@ -26,8 +26,8 @@ public class AlunoService {
 	}
 
 	// criando metodo de recuperar aluno pela chave primária
-	public Aluno buscarAlunoPorId(Integer numeromatriculaaluno) { // integer pq é o tipo da chave primária de aluno
-		return alunoRepo.findById(numeromatriculaaluno).get(); // utilizamos o getbyid optional, depois o .get para
+	public Aluno buscarAlunoPorId(Integer numeroMatriculaAluno) { // integer pq é o tipo da chave primária de aluno
+		return alunoRepo.findById(numeroMatriculaAluno).get(); // utilizamos o getbyid optional, depois o .get para
 																// retornar um aluno.
 	}
 

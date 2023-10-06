@@ -33,7 +33,7 @@ public class LivroService {
 		return livroRepo.save(novoLivro); // o .save ja vai salvar
 	}
 
-	public Livro atualizarEditora(Livro atualizaLivro) {
+	public Livro atualizarLivro(Livro atualizaLivro) {
 		return livroRepo.save(atualizaLivro);
 	}
 
