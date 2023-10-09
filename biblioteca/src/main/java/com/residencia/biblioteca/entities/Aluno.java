@@ -3,6 +3,8 @@ package com.residencia.biblioteca.entities;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -49,6 +51,8 @@ public class Aluno {
 	@Column(name = "cidade")
 	private String cidade;
 
+	@JsonManagedReference(value = "aluno-mng-ref") // anotação para gerenciar o relacionamento - ir no lado onetomany e colocar tal
+							// anotação - tem que ter tal value, para aluno gerenciar uma relação
 	@OneToMany(mappedBy = "aluno")
 	// onetomany é para dizer que é 1 para muitos
 	// o mappedBy é para colocar o nome da instancia de aluno dentro de Emprestimo -

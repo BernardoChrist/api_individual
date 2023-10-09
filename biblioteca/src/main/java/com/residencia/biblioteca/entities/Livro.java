@@ -3,6 +3,9 @@ package com.residencia.biblioteca.entities;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,88 +20,90 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "livro") // o table é opcional, utilizado para dar o nome a tabela
 public class Livro {
-	
+
 	// os atributos abaixo são todas as colunas la no banco de dados
 
-		@Id // o Id é para informar que a entidade é chave primaria
-		@GeneratedValue(strategy = GenerationType.IDENTITY) // vai ser usado para gerar o valor automático, e p identity diz
-															// que o banco vai gerar esse valor
-		@Column(name = "codigolivro") // é também opcional
-		private Integer codigoLivro;
+	@Id // o Id é para informar que a entidade é chave primaria
+	@GeneratedValue(strategy = GenerationType.IDENTITY) // vai ser usado para gerar o valor automático, e p identity diz
+														// que o banco vai gerar esse valor
+	@Column(name = "codigolivro") // é também opcional
+	private Integer codigoLivro;
 
-		@Column(name = "nomelivro")
-		private String nomeLivro;
+	@Column(name = "nomelivro")
+	private String nomeLivro;
 
-		@Column(name = "nomeautor")
-		private String nomeAutor;
+	@Column(name = "nomeautor")
+	private String nomeAutor;
 
-		@Column(name = "datalancamento")
-		private Date dataLancamento;
+	@Column(name = "datalancamento")
+	private Date dataLancamento;
 
-		@Column(name = "codigoisbn")
-		private Integer codigoIsbn;
-		
-		@ManyToOne //muitos livros para 1 editora
-		@JoinColumn(name = "codigoeditora", referencedColumnName = "codigoeditora")
-		private Editora editora;
-		
-		@OneToMany(mappedBy = "livro") //1 livro para muitos emprestimos
-		private List<Emprestimo> emprestimos;
+	@Column(name = "codigoisbn")
+	private Integer codigoIsbn;
 
-		public Integer getCodigoLivro() {
-			return codigoLivro;
-		}
+	@JsonBackReference(value = "editora-livro-ref")
+	@ManyToOne // muitos livros para 1 editora
+	@JoinColumn(name = "codigoeditora", referencedColumnName = "codigoeditora")
+	private Editora editora;
 
-		public void setCodigoLivro(Integer codigoLivro) {
-			this.codigoLivro = codigoLivro;
-		}
+	@JsonManagedReference(value = "livro-emprestimo-ref") // utilizando managed pq é o principal, onde temos o List
+	@OneToMany(mappedBy = "livro") // 1 livro para muitos emprestimos
+	private List<Emprestimo> emprestimos;
 
-		public String getNomeLivro() {
-			return nomeLivro;
-		}
+	public Integer getCodigoLivro() {
+		return codigoLivro;
+	}
 
-		public void setNomeLivro(String nomeLivro) {
-			this.nomeLivro = nomeLivro;
-		}
+	public void setCodigoLivro(Integer codigoLivro) {
+		this.codigoLivro = codigoLivro;
+	}
 
-		public String getNomeAutor() {
-			return nomeAutor;
-		}
+	public String getNomeLivro() {
+		return nomeLivro;
+	}
 
-		public void setNomeAutor(String nomeAutor) {
-			this.nomeAutor = nomeAutor;
-		}
+	public void setNomeLivro(String nomeLivro) {
+		this.nomeLivro = nomeLivro;
+	}
 
-		public Date getDataLancamento() {
-			return dataLancamento;
-		}
+	public String getNomeAutor() {
+		return nomeAutor;
+	}
 
-		public void setDataLancamento(Date dataLancamento) {
-			this.dataLancamento = dataLancamento;
-		}
+	public void setNomeAutor(String nomeAutor) {
+		this.nomeAutor = nomeAutor;
+	}
 
-		public Integer getCodigoIsbn() {
-			return codigoIsbn;
-		}
+	public Date getDataLancamento() {
+		return dataLancamento;
+	}
 
-		public void setCodigoIsbn(Integer codigoIsbn) {
-			this.codigoIsbn = codigoIsbn;
-		}
+	public void setDataLancamento(Date dataLancamento) {
+		this.dataLancamento = dataLancamento;
+	}
 
-		public Editora getEditora() {
-			return editora;
-		}
+	public Integer getCodigoIsbn() {
+		return codigoIsbn;
+	}
 
-		public void setEditora(Editora editora) {
-			this.editora = editora;
-		}
+	public void setCodigoIsbn(Integer codigoIsbn) {
+		this.codigoIsbn = codigoIsbn;
+	}
 
-		public List<Emprestimo> getEmprestimos() {
-			return emprestimos;
-		}
+	public Editora getEditora() {
+		return editora;
+	}
 
-		public void setEmprestimos(List<Emprestimo> emprestimos) {
-			this.emprestimos = emprestimos;
-		}
+	public void setEditora(Editora editora) {
+		this.editora = editora;
+	}
+
+	public List<Emprestimo> getEmprestimos() {
+		return emprestimos;
+	}
+
+	public void setEmprestimos(List<Emprestimo> emprestimos) {
+		this.emprestimos = emprestimos;
+	}
 
 }

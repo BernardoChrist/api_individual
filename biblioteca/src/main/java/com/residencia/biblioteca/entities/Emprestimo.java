@@ -3,6 +3,8 @@ package com.residencia.biblioteca.entities;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,14 +26,18 @@ public class Emprestimo {
 	@Column(name = "codigoemprestimo") // é também opcional
 	private Integer codigoEmprestimo;
 
+	@JsonBackReference(value = "aluno-mng-ref") // ao contrario do aluno, essa é a parte de tras do gerenciamento, por
+												// isso utilizamos essa outra anotação - o value é identico nas duas
+												// partes
 	@ManyToOne // muitos para um
 	@JoinColumn(name = "numeromatriculaaluno", referencedColumnName = "numeromatriculaaluno")
 	// o name é o nome da coluna na tabela emprestimo que vai ser a chave
 	// estrangeira, E o reference no banco, vai ser o referencedname
 	private Aluno aluno; // temos que instanciar aluno da sua classe, isso irá puxar todos os dados dos
 							// alunos
-	
-	@ManyToOne //muitos emprestimos para 1 livro
+
+	@JsonBackReference(value = "livro-emprestimo-ref") // back pq é ManyToOne 
+	@ManyToOne // muitos emprestimos para 1 livro
 	@JoinColumn(name = "codigolivro", referencedColumnName = "codigolivro")
 	private Livro livro;
 
@@ -43,8 +49,7 @@ public class Emprestimo {
 
 	@Column(name = "valoremprestimo")
 	private BigDecimal valorEmprestimo;
-	
-	
+
 	public Integer getCodigoEmprestimo() {
 		return codigoEmprestimo;
 	}
