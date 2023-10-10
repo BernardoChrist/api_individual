@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.residencia.biblioteca.entities.Livro;
+import com.residencia.biblioteca.entities.Livro;
 import com.residencia.biblioteca.repositories.LivroRepository;
 
 @Service
@@ -21,12 +22,16 @@ public class LivroService {
 	@Autowired
 	LivroRepository livroRepo;
 
-	public List<Livro> listarLivros() { // List pq são varias editoras
+	public List<Livro> listarLivros() { // List pq são varias livros
 		return livroRepo.findAll();
 	}
 
 	public Livro buscarLivroPorId(Integer codigoLivro) { // integer pq é o tipo da chave primária de Livro
-		return livroRepo.findById(codigoLivro).get();
+		return livroRepo.findById(codigoLivro).orElse(null);
+		// utilizamos o orElse, caso o numero do ID não exista, seria uma exception -
+				// entao o que tivermos dentro do orElse, irá ser passado na pesquisa quando o
+				// ID não for encontrado - - Caso o Id é encontrado, retorna o ID como se fosse
+				// um .get()
 	}
 
 	public Livro salvarLivro(Livro novoLivro) { // salvando um novo aluno na entidade Livro
@@ -37,11 +42,26 @@ public class LivroService {
 		return livroRepo.save(atualizaLivro);
 	}
 
-	public void deletarLivro(Livro deletaLivro) { // será void pq não irá devolver nd,
-		livroRepo.delete(deletaLivro); // por isso também não tem o return
-		/*
-		 * Aluno confereAlunoDeletado =
-		 * buscarAlunoPorId(aluno.getNumeroMatriculaAluno())
-		 */
+	public Boolean deletarLivro(Livro deletaLivro) { // boolena pq é mais facil de tratar no controller
+
+		if (deletaLivro == null) {
+			return false; // aqui estamos vendo se o livro inserido para deletar é nulo
+		}
+
+		Livro livroExistente = buscarLivroPorId(deletaLivro.getCodigoLivro());
+
+		if (livroExistente == null) {
+			return false; // aqui etamos vendo se o livro existe no banco
+		}
+
+		livroRepo.delete(deletaLivro);
+
+		Livro livroContinuaExistindo = buscarLivroPorId(deletaLivro.getCodigoLivro());
+
+		if (livroContinuaExistindo == null) {
+			return true;
+		}
+		return false;
+
 	}
 }

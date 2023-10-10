@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.residencia.biblioteca.entities.Emprestimo;
+import com.residencia.biblioteca.entities.Emprestimo;
 import com.residencia.biblioteca.services.EmprestimoService;
 
 
@@ -40,7 +41,16 @@ public class EmprestimoController {
 	public ResponseEntity<Emprestimo> buscarEmprestimoPorId(@PathVariable Integer codigoEmprestimo) {
 		// o @PathVariable é para dizer que o parametro ID vai ser passado por path -
 		// /id
+		
+	Emprestimo emprestimo = emprestimoService.buscarEmprestimoPorId(codigoEmprestimo);
+		
+	if(emprestimo == null)
+		return new ResponseEntity<>(emprestimoService.buscarEmprestimoPorId(codigoEmprestimo), HttpStatus.NOT_FOUND);
+	
+	else
 		return new ResponseEntity<>(emprestimoService.buscarEmprestimoPorId(codigoEmprestimo), HttpStatus.OK);
+	
+	//utilizamos essa estrutura para alterar o status - quando for nulo vai dar um NotFound
 	}
 
 	@PostMapping // post é pq iremos salvar um objeto
@@ -57,7 +67,15 @@ public class EmprestimoController {
 
 	@DeleteMapping // delete é quando o metodo é para deletar
 	public ResponseEntity<String> deletarEmprestimo(@RequestBody Emprestimo deletaEmprestimo) {// string pq vamos retornar uma frase
-		emprestimoService.deletarEmprestimo(deletaEmprestimo); //chamamos fora pq temos que retornar uma string
-		return new ResponseEntity<>("Deletado com Sucesso", HttpStatus.OK); //é passado um texto pq espeara receber uma string
+		if (emprestimoService.deletarEmprestimo(deletaEmprestimo) == true) { // chamamos fora pq temos que retornar uma string
+			return new ResponseEntity<>("Deletado com Sucesso", HttpStatus.OK); // é passado um texto pq espeara receber
+																				// uma string
+
+		} else {
+			return new ResponseEntity<>("Não foi possível deletar", HttpStatus.BAD_REQUEST); // é passado um texto pq
+																								// espeara receber uma
+																								// string
+
+		}
 	}
 }

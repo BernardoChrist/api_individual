@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.residencia.biblioteca.entities.Livro;
+import com.residencia.biblioteca.entities.Emprestimo;
+import com.residencia.biblioteca.entities.Livro;
 import com.residencia.biblioteca.services.LivroService;
 
 @RestController // obrigatório para dizer que é um controller
@@ -41,7 +43,16 @@ public class LivroController {
 	public ResponseEntity<Livro> buscarLivroPorId(@PathVariable Integer codigoLivro) {
 		// o @PathVariable é para dizer que o parametro ID vai ser passado por path -
 		// /id
+		
+	Livro livro = livroService.buscarLivroPorId(codigoLivro);
+	
+	if(livro == null)
+		return new ResponseEntity<>(livroService.buscarLivroPorId(codigoLivro), HttpStatus.NOT_FOUND);
+	
+	else
 		return new ResponseEntity<>(livroService.buscarLivroPorId(codigoLivro), HttpStatus.OK);
+
+	//utilizamos essa estrutura para alterar o status - quando for nulo vai dar um NotFound
 	}
 
 	@PostMapping // post é pq iremos salvar um objeto
@@ -58,7 +69,15 @@ public class LivroController {
 
 	@DeleteMapping // delete é quando o metodo é para deletar
 	public ResponseEntity<String> deletarLivro(@RequestBody Livro deletaLivro) {// string pq vamos retornar uma frase
-		livroService.deletarLivro(deletaLivro); //chamamos fora pq temos que retornar uma string
-		return new ResponseEntity<>("Deletado com Sucesso", HttpStatus.OK); //é passado um texto pq espeara receber uma string
+		if (livroService.deletarLivro(deletaLivro) == true) { // chamamos fora pq temos que retornar uma string
+			return new ResponseEntity<>("Deletado com Sucesso", HttpStatus.OK); // é passado um texto pq espeara receber
+																				// uma string
+
+		} else {
+			return new ResponseEntity<>("Não foi possível deletar", HttpStatus.BAD_REQUEST); // é passado um texto pq
+																								// espeara receber uma
+																								// string
+
+		}
 	}
 }

@@ -4,7 +4,9 @@ import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,6 +18,10 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+@JsonIdentityInfo(
+		generator = ObjectIdGenerators.PropertyGenerator.class, // esse será padrão, copia e cola
+		property = "codigoLivro" // aqui tem que ser o atributo da chave primária
+)
 //o entity é utilizado para a informar que essa classe é uma entidade - é obrigatório
 @Entity
 @Table(name = "livro") // o table é opcional, utilizado para dar o nome a tabela
@@ -41,12 +47,12 @@ public class Livro {
 	@Column(name = "codigoisbn")
 	private Integer codigoIsbn;
 
-	@JsonBackReference(value = "editora-livro-ref")
+	//@JsonBackReference(value = "editora-livro-ref")
 	@ManyToOne // muitos livros para 1 editora
 	@JoinColumn(name = "codigoeditora", referencedColumnName = "codigoeditora")
 	private Editora editora;
 
-	@JsonManagedReference(value = "livro-emprestimo-ref") // utilizando managed pq é o principal, onde temos o List
+	//@JsonManagedReference(value = "livro-emprestimo-ref") // utilizando managed pq é o principal, onde temos o List
 	@OneToMany(mappedBy = "livro") // 1 livro para muitos emprestimos
 	private List<Emprestimo> emprestimos;
 

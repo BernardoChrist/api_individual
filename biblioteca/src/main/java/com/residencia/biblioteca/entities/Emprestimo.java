@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,6 +16,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+@JsonIdentityInfo(
+		generator = ObjectIdGenerators.PropertyGenerator.class, // esse será padrão, copia e cola
+		property = "codigoEmprestimo" // aqui tem que ser o atributo da chave primária
+)
 //o entity é utilizado para a informar que essa classe é uma entidade - é obrigatório
 @Entity
 @Table(name = "emprestimo") // o table é opcional, utilizado para dar o nome a tabela
@@ -26,9 +32,9 @@ public class Emprestimo {
 	@Column(name = "codigoemprestimo") // é também opcional
 	private Integer codigoEmprestimo;
 
-	@JsonBackReference(value = "aluno-mng-ref") // ao contrario do aluno, essa é a parte de tras do gerenciamento, por
+	/*@JsonBackReference(value = "aluno-mng-ref") // ao contrario do aluno, essa é a parte de tras do gerenciamento, por
 												// isso utilizamos essa outra anotação - o value é identico nas duas
-												// partes
+												// partes*/
 	@ManyToOne // muitos para um
 	@JoinColumn(name = "numeromatriculaaluno", referencedColumnName = "numeromatriculaaluno")
 	// o name é o nome da coluna na tabela emprestimo que vai ser a chave
@@ -36,7 +42,7 @@ public class Emprestimo {
 	private Aluno aluno; // temos que instanciar aluno da sua classe, isso irá puxar todos os dados dos
 							// alunos
 
-	@JsonBackReference(value = "livro-emprestimo-ref") // back pq é ManyToOne 
+	//@JsonBackReference(value = "livro-emprestimo-ref") // back pq é ManyToOne 
 	@ManyToOne // muitos emprestimos para 1 livro
 	@JoinColumn(name = "codigolivro", referencedColumnName = "codigolivro")
 	private Livro livro;

@@ -2,7 +2,9 @@ package com.residencia.biblioteca.entities;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,6 +14,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+//a anotação abaixo é outro metodo de tratamento de recursividade, funciona com a mesma finalidade do ManagedREference e tals
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, // esse será padrão, copia e cola
+		property = "codigoEditora" // aqui tem que ser o atributo da chave primária
+)
 @Entity
 @Table(name = "editora") // o table é opcional, utilizado para dar o nome a tabela
 public class Editora {
@@ -36,7 +42,7 @@ public class Editora {
 	@Column(name = "imagem_url")
 	private String imagemUrl;
 
-	@JsonManagedReference(value = "editora-livro-ref") 
+	// @JsonManagedReference(value = "editora-livro-ref")
 	@OneToMany(mappedBy = "editora") // 1 editora para muitos livros
 	private List<Livro> livros;
 

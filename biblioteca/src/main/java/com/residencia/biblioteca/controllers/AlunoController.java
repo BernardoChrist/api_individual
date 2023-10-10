@@ -40,18 +40,28 @@ public class AlunoController {
 	public ResponseEntity<Aluno> buscarAlunoPorId(@PathVariable Integer numeroMatriculaAluno) {
 		// o @PathVariable é para dizer que o parametro ID vai ser passado por path -
 		// /id
-		return new ResponseEntity<>(alunoService.buscarAlunoPorId(numeroMatriculaAluno), HttpStatus.OK);
-	}
-	
-	//query
-	@GetMapping("/porid") // aqui sera buscado por query, ao inves de path
-	// o texto entre chaves tem que ser igual o do pathVariable
-	public ResponseEntity<Aluno> buscarPorId(@RequestParam Integer numeroMatriculaAluno) {
-		// o @PathVariable é para dizer que o parametro ID vai ser passado por path -
-		// /id
-		return new ResponseEntity<>(alunoService.buscarAlunoPorId(numeroMatriculaAluno), HttpStatus.OK);
+		Aluno aluno = alunoService.buscarAlunoPorId(numeroMatriculaAluno);
+
+		if (aluno == null)
+			return new ResponseEntity<>(alunoService.buscarAlunoPorId(numeroMatriculaAluno), HttpStatus.NOT_FOUND);
+
+		else
+			return new ResponseEntity<>(alunoService.buscarAlunoPorId(numeroMatriculaAluno), HttpStatus.OK);
+		// utilizamos essa estrutura para alterar o status - quando for nulo vai dar um
+		// NotFound
 	}
 
+	/*
+	 * //query
+	 * 
+	 * @GetMapping("/porid") // aqui sera buscado por query, ao inves de path // o
+	 * texto entre chaves tem que ser igual o do pathVariable public
+	 * ResponseEntity<Aluno> buscarPorId(@RequestParam Integer numeroMatriculaAluno)
+	 * { // o @PathVariable é para dizer que o parametro ID vai ser passado por path
+	 * - // /id return new
+	 * ResponseEntity<>(alunoService.buscarAlunoPorId(numeroMatriculaAluno),
+	 * HttpStatus.OK); }
+	 */
 	@PostMapping // post é pq iremos salvar um objeto
 	public ResponseEntity<Aluno> salvarAluno(@RequestBody Aluno novoAluno) {
 		// o @RequestBody é pq vão ser passados varios dados, formando um body, json
@@ -66,7 +76,15 @@ public class AlunoController {
 
 	@DeleteMapping // delete é quando o metodo é para deletar
 	public ResponseEntity<String> deletarAluno(@RequestBody Aluno deletaAluno) {// string pq vamos retornar uma frase
-		alunoService.deletarAluno(deletaAluno); //chamamos fora pq temos que retornar uma string
-		return new ResponseEntity<>("Deletado com Sucesso", HttpStatus.OK); //é passado um texto pq espeara receber uma string
+		if (alunoService.deletarAluno(deletaAluno) == true) { // chamamos fora pq temos que retornar uma string
+			return new ResponseEntity<>("Deletado com Sucesso", HttpStatus.OK); // é passado um texto pq espeara receber
+																				// uma string
+
+		} else {
+			return new ResponseEntity<>("Não foi possível deletar", HttpStatus.BAD_REQUEST); // é passado um texto pq
+																								// espeara receber uma
+																								// string
+
+		}
 	}
 }

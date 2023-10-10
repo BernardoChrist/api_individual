@@ -3,7 +3,8 @@ package com.residencia.biblioteca.entities;
 import java.util.Date;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,6 +13,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
+@JsonIdentityInfo(
+		generator = ObjectIdGenerators.PropertyGenerator.class, // esse será padrão, copia e cola
+		property = "numeroMatriculaAluno" // aqui tem que ser o atributo da chave primária
+)
 
 //o entity é utilizado para a informar que essa classe é uma entidade - é obrigatório
 @Entity
@@ -51,8 +57,11 @@ public class Aluno {
 	@Column(name = "cidade")
 	private String cidade;
 
-	@JsonManagedReference(value = "aluno-mng-ref") // anotação para gerenciar o relacionamento - ir no lado onetomany e colocar tal
-							// anotação - tem que ter tal value, para aluno gerenciar uma relação
+	/*
+	 * @JsonManagedReference(value = "aluno-mng-ref") // anotação para gerenciar o
+	 * relacionamento - ir no lado onetomany e colocar tal // anotação - tem que ter
+	 * tal value, para aluno gerenciar uma relação
+	 */
 	@OneToMany(mappedBy = "aluno")
 	// onetomany é para dizer que é 1 para muitos
 	// o mappedBy é para colocar o nome da instancia de aluno dentro de Emprestimo -

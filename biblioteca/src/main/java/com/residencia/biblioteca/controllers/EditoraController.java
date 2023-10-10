@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.residencia.biblioteca.entities.Editora;
+import com.residencia.biblioteca.entities.Editora;
 import com.residencia.biblioteca.services.EditoraService;
 
 
@@ -40,7 +41,15 @@ public class EditoraController {
 	public ResponseEntity<Editora> buscarEditoraPorId(@PathVariable Integer codigoEditora) {
 		// o @PathVariable é para dizer que o parametro ID vai ser passado por path -
 		// /id
-		return new ResponseEntity<>(editoraService.buscarEditoraPorId(codigoEditora), HttpStatus.OK);
+		
+		Editora editora = editoraService.buscarEditoraPorId(codigoEditora);
+		
+		if(editora == null)
+			return new ResponseEntity<>(editoraService.buscarEditoraPorId(codigoEditora), HttpStatus.NOT_FOUND);
+		
+		else
+			return new ResponseEntity<>(editoraService.buscarEditoraPorId(codigoEditora), HttpStatus.OK);
+		//utilizamos essa estrutura para alterar o status - quando for nulo vai dar um NotFound
 	}
 
 	@PostMapping // post é pq iremos salvar um objeto
@@ -57,7 +66,15 @@ public class EditoraController {
 
 	@DeleteMapping // delete é quando o metodo é para deletar
 	public ResponseEntity<String> deletarEditora(@RequestBody Editora deletaEditora) {// string pq vamos retornar uma frase
-		editoraService.deletarEditora(deletaEditora); //chamamos fora pq temos que retornar uma string
-		return new ResponseEntity<>("Deletado com Sucesso", HttpStatus.OK); //é passado um texto pq espeara receber uma string
+		if (editoraService.deletarEditora(deletaEditora) == true) { // chamamos fora pq temos que retornar uma string
+			return new ResponseEntity<>("Deletado com Sucesso", HttpStatus.OK); // é passado um texto pq espeara receber
+																				// uma string
+
+		} else {
+			return new ResponseEntity<>("Não foi possível deletar", HttpStatus.BAD_REQUEST); // é passado um texto pq
+																								// espeara receber uma
+																								// string
+
+		}
 	}
 }

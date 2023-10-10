@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.residencia.biblioteca.entities.Emprestimo;
+import com.residencia.biblioteca.entities.Emprestimo;
 import com.residencia.biblioteca.repositories.EmprestimoRepository;
 
 @Service
@@ -27,7 +28,11 @@ public class EmprestimoService {
 
 	public Emprestimo buscarEmprestimoPorId(Integer codigoEmprestimo) { // integer pq é o tipo da chave primária de
 																		// Emprestimo
-		return emprestimoRepo.findById(codigoEmprestimo).get();
+		return emprestimoRepo.findById(codigoEmprestimo).orElse(null);
+		// utilizamos o orElse, caso o numero do ID não exista, seria uma exception -
+				// entao o que tivermos dentro do orElse, irá ser passado na pesquisa quando o
+				// ID não for encontrado - - Caso o Id é encontrado, retorna o ID como se fosse
+				// um .get()
 	}
 
 	public Emprestimo salvarEmprestimo(Emprestimo novoEmprestimo) { // salvando um novo emprestimo na entidade Emprestimo
@@ -38,11 +43,26 @@ public class EmprestimoService {
 		return emprestimoRepo.save(atualizaEmprestimo);
 	}
 
-	public void deletarEmprestimo(Emprestimo deletaEmprestimo) { // será void pq não irá devolver nd,
-		emprestimoRepo.delete(deletaEmprestimo); // por isso também não tem o return
-		/*
-		 * Aluno confereAlunoDeletado =
-		 * buscarAlunoPorId(aluno.getNumeroMatriculaAluno())
-		 */
+	public Boolean deletarEmprestimo(Emprestimo deletaEmprestimo) { // boolena pq é mais facil de tratar no controller
+
+		if (deletaEmprestimo == null) {
+			return false; // aqui estamos vendo se o emprestimo inserido para deletar é nulo
+		}
+
+		Emprestimo emprestimoExistente = buscarEmprestimoPorId(deletaEmprestimo.getCodigoEmprestimo());
+
+		if (emprestimoExistente == null) {
+			return false; // aqui etamos vendo se o emprestimo existe no banco
+		}
+
+		emprestimoRepo.delete(deletaEmprestimo);
+
+		Emprestimo emprestimoContinuaExistindo = buscarEmprestimoPorId(deletaEmprestimo.getCodigoEmprestimo());
+
+		if (emprestimoContinuaExistindo == null) {
+			return true;
+		}
+		return false;
+
 	}
 }

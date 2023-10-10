@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.residencia.biblioteca.entities.Editora;
+import com.residencia.biblioteca.entities.Editora;
 import com.residencia.biblioteca.repositories.EditoraRepository;
 
 @Service
@@ -27,8 +28,12 @@ public class EditoraService {
 
 	// criando metodo de recuperar editora pela chave primária
 	public Editora buscarEditoraPorId(Integer codigoEditora) { // integer pq é o tipo da chave primária de Editora
-		return editoraRepo.findById(codigoEditora).get(); // utilizamos o getbyid optional, depois o .get para
+		return editoraRepo.findById(codigoEditora).orElse(null); // utilizamos o getbyid optional, depois o .get para
 																// retornar uma editora.
+		// utilizamos o orElse, caso o numero do ID não exista, seria uma exception -
+		// entao o que tivermos dentro do orElse, irá ser passado na pesquisa quando o
+		// ID não for encontrado - - Caso o Id é encontrado, retorna o ID como se fosse
+		// um .get()
 	}
 
 	// criando metodo para salvar uma nova editora
@@ -42,11 +47,26 @@ public class EditoraService {
 	}
 
 	// criando metodo para deletar um determinada editora
-	public void deletarEditora(Editora deletaEditora) { // será void pq não irá devolver nd,
-		editoraRepo.delete(deletaEditora); // por isso também não tem o return
-		/*
-		 * Aluno confereAlunoDeletado =
-		 * buscarAlunoPorId(aluno.getNumeroMatriculaAluno())
-		 */
+	public Boolean deletarEditora(Editora deletaEditora) { // boolena pq é mais facil de tratar no controller
+
+		if (deletaEditora == null) {
+			return false; // aqui estamos vendo se o editora inserido para deletar é nulo
+		}
+
+		Editora editoraExistente = buscarEditoraPorId(deletaEditora.getCodigoEditora());
+
+		if (editoraExistente == null) {
+			return false; // aqui etamos vendo se o editora existe no banco
+		}
+
+		editoraRepo.delete(deletaEditora);
+
+		Editora editoraContinuaExistindo = buscarEditoraPorId(deletaEditora.getCodigoEditora());
+
+		if (editoraContinuaExistindo == null) {
+			return true;
+		}
+		return false;
+
 	}
 }

@@ -27,8 +27,15 @@ public class AlunoService {
 
 	// criando metodo de recuperar aluno pela chave primária
 	public Aluno buscarAlunoPorId(Integer numeroMatriculaAluno) { // integer pq é o tipo da chave primária de aluno
-		return alunoRepo.findById(numeroMatriculaAluno).get(); // utilizamos o getbyid optional, depois o .get para
-																// retornar um aluno.
+
+		return alunoRepo.findById(numeroMatriculaAluno).orElse(null); // utilizamos o getbyid optional, depois o .get
+																		// para
+																		// retornar um aluno.
+		// temos que fazer essa alteração no service para depois alterar o controller
+		// utilizamos o orElse, caso o numero do ID não exista, seria uma exception -
+		// entao o que tivermos dentro do orElse, irá ser passado na pesquisa quando o
+		// ID não for encontrado - - Caso o Id é encontrado, retorna o ID como se fosse
+		// um .get()
 	}
 
 	// criando metodo para salvar um novo aluno
@@ -42,11 +49,26 @@ public class AlunoService {
 	}
 
 	// criando metodo para deletar um determinado aluno
-	public void deletarAluno(Aluno deletaAluno) { // será void pq não irá devolver nd,
-		alunoRepo.delete(deletaAluno); // por isso também não tem o return
-		/*
-		 * Aluno confereAlunoDeletado =
-		 * buscarAlunoPorId(aluno.getNumeroMatriculaAluno())
-		 */
+	public Boolean deletarAluno(Aluno deletaAluno) { // boolena pq é mais facil de tratar no controller
+
+		if (deletaAluno == null) {
+			return false; // aqui estamos vendo se o aluno inserido para deletar é nulo
+		}
+
+		Aluno alunoExistente = buscarAlunoPorId(deletaAluno.getNumeroMatriculaAluno());
+
+		if (alunoExistente == null) {
+			return false; // aqui etamos vendo se o aluno existe no banco
+		}
+
+		alunoRepo.delete(deletaAluno);
+
+		Aluno alunoContinuaExistindo = buscarAlunoPorId(deletaAluno.getNumeroMatriculaAluno());
+
+		if (alunoContinuaExistindo == null) {
+			return true;
+		}
+		return false;
+
 	}
 }
