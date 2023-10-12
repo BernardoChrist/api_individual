@@ -16,8 +16,9 @@ import jakarta.persistence.Table;
 
 //a anotação abaixo é outro metodo de tratamento de recursividade, funciona com a mesma finalidade do ManagedREference e tals
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, // esse será padrão, copia e cola
-		property = "codigoEditora" // aqui tem que ser o atributo da chave primária
-)
+		property = "codigoEditora", // aqui tem que ser o atributo da chave primária
+		scope = Editora.class)
+
 @Entity
 @Table(name = "editora") // o table é opcional, utilizado para dar o nome a tabela
 public class Editora {

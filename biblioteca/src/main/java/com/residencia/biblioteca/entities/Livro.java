@@ -3,9 +3,7 @@ package com.residencia.biblioteca.entities;
 import java.util.Date;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Column;
@@ -20,8 +18,8 @@ import jakarta.persistence.Table;
 
 @JsonIdentityInfo(
 		generator = ObjectIdGenerators.PropertyGenerator.class, // esse será padrão, copia e cola
-		property = "codigoLivro" // aqui tem que ser o atributo da chave primária
-)
+		property = "codigoLivro", // aqui tem que ser o atributo da chave primária
+		scope = Livro.class)
 //o entity é utilizado para a informar que essa classe é uma entidade - é obrigatório
 @Entity
 @Table(name = "livro") // o table é opcional, utilizado para dar o nome a tabela
@@ -38,8 +36,9 @@ public class Livro {
 	@Column(name = "nomelivro")
 	private String nomeLivro;
 
-	@Column(name = "nomeautor")
-	private String nomeAutor;
+	@ManyToOne
+	@JoinColumn(name = "codigoautor", referencedColumnName = "codigoautor")
+	private Autor autor;
 
 	@Column(name = "datalancamento")
 	private Date dataLancamento;
@@ -72,13 +71,6 @@ public class Livro {
 		this.nomeLivro = nomeLivro;
 	}
 
-	public String getNomeAutor() {
-		return nomeAutor;
-	}
-
-	public void setNomeAutor(String nomeAutor) {
-		this.nomeAutor = nomeAutor;
-	}
 
 	public Date getDataLancamento() {
 		return dataLancamento;
@@ -110,6 +102,14 @@ public class Livro {
 
 	public void setEmprestimos(List<Emprestimo> emprestimos) {
 		this.emprestimos = emprestimos;
+	}
+	
+	public Autor getAutor() {
+		return autor;
+	}
+
+	public void setAutor(Autor autor) {
+		this.autor = autor;
 	}
 
 }

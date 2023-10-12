@@ -16,8 +16,8 @@ import jakarta.persistence.Table;
 
 @JsonIdentityInfo(
 		generator = ObjectIdGenerators.PropertyGenerator.class, // esse será padrão, copia e cola
-		property = "numeroMatriculaAluno" // aqui tem que ser o atributo da chave primária
-)
+		property = "numeroMatriculaAluno", // aqui tem que ser o atributo da chave primária
+		scope = Aluno.class)
 
 //o entity é utilizado para a informar que essa classe é uma entidade - é obrigatório
 @Entity
