@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.residencia.biblioteca.entities.Emprestimo;
-import com.residencia.biblioteca.entities.Emprestimo;
 import com.residencia.biblioteca.repositories.EmprestimoRepository;
 
 @Service

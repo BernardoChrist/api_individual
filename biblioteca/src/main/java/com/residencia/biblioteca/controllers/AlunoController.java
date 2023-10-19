@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.residencia.biblioteca.dto.AlunoResumidoDTO;
 import com.residencia.biblioteca.entities.Aluno;
 import com.residencia.biblioteca.services.AlunoService;
 
@@ -35,6 +35,13 @@ public class AlunoController {
 		// chamando o metodo do service ao lado, com o HttpStatus que o usuario quiser
 	}
 
+	@GetMapping("/resumido")
+	public ResponseEntity<List<AlunoResumidoDTO>> listarAlunosResumidos() {
+
+		return new ResponseEntity<>(alunoService.listarAlunosResumidos(), HttpStatus.OK);
+		// chamando o metodo la no aluno service
+	}
+
 	@GetMapping("/{numeroMatriculaAluno}") // temos que usar o {} dessa forma para diferenciar do primeiro getmapping
 	// o texto entre chaves tem que ser igual o do pathVariable
 	public ResponseEntity<Aluno> buscarAlunoPorId(@PathVariable Integer numeroMatriculaAluno) {
@@ -51,17 +58,21 @@ public class AlunoController {
 		// NotFound
 	}
 
-	/*
-	 * //query
-	 * 
-	 * @GetMapping("/porid") // aqui sera buscado por query, ao inves de path // o
-	 * texto entre chaves tem que ser igual o do pathVariable public
-	 * ResponseEntity<Aluno> buscarPorId(@RequestParam Integer numeroMatriculaAluno)
-	 * { // o @PathVariable é para dizer que o parametro ID vai ser passado por path
-	 * - // /id return new
-	 * ResponseEntity<>(alunoService.buscarAlunoPorId(numeroMatriculaAluno),
-	 * HttpStatus.OK); }
-	 */
+	@GetMapping("/resumido/{numeroMatriculaAluno}")
+	// o texto entre chaves tem que ser igual o do pathVariable
+	public ResponseEntity<AlunoResumidoDTO> bucarAlunoResumidoPorId(@PathVariable Integer numeroMatriculaAluno) {
+
+		AlunoResumidoDTO alunoResDTO = alunoService.buscarAlunoResumidoPorId(numeroMatriculaAluno);
+
+		if (alunoResDTO == null)
+			return new ResponseEntity<>(alunoResDTO, HttpStatus.NOT_FOUND);
+
+		else
+			return new ResponseEntity<>(alunoResDTO, HttpStatus.OK);
+		// utilizamos essa estrutura para alterar o status - quando for nulo vai dar um
+		// NotFound
+	}
+
 	@PostMapping // post é pq iremos salvar um objeto
 	public ResponseEntity<Aluno> salvarAluno(@RequestBody Aluno novoAluno) {
 		// o @RequestBody é pq vão ser passados varios dados, formando um body, json

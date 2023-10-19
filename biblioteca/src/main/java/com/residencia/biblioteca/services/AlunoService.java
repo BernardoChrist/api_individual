@@ -1,10 +1,12 @@
 package com.residencia.biblioteca.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.residencia.biblioteca.dto.AlunoResumidoDTO;
 import com.residencia.biblioteca.entities.Aluno;
 import com.residencia.biblioteca.repositories.AlunoRepository;
 
@@ -25,6 +27,29 @@ public class AlunoService {
 		return alunoRepo.findAll(); // o findAll irá listar todos
 	}
 
+	// metodo de listar todos os alunos DTO - temos que usar list
+	public List<AlunoResumidoDTO> listarAlunosResumidos() {
+
+		List<Aluno> alunos = alunoRepo.findAll(); // guardar tudo dentro da list
+		List<AlunoResumidoDTO> alunosDTO = new ArrayList<>();
+
+		for (Aluno aluno : alunos) {
+			// cada vez que passar pelo laço, aluno irá guardar os atributos de alunos
+
+			AlunoResumidoDTO alunoResDTO = new AlunoResumidoDTO();
+
+			alunoResDTO.setNumeroMatriculaAluno(aluno.getNumeroMatriculaAluno());
+			alunoResDTO.setNome(aluno.getNome());
+			alunoResDTO.setCpf(aluno.getCpf());
+
+			alunosDTO.add(alunoResDTO);
+			// metodo add para adicionar varios objetos na lista alunosDTO
+			// senão quando rodar o laço, perderia as informações
+		}
+
+		return alunosDTO;
+	}
+
 	// criando metodo de recuperar aluno pela chave primária
 	public Aluno buscarAlunoPorId(Integer numeroMatriculaAluno) { // integer pq é o tipo da chave primária de aluno
 
@@ -36,6 +61,34 @@ public class AlunoService {
 		// entao o que tivermos dentro do orElse, irá ser passado na pesquisa quando o
 		// ID não for encontrado - - Caso o Id é encontrado, retorna o ID como se fosse
 		// um .get()
+	}
+
+	// metodo para devolver um aluno resumido DTO por id
+	public AlunoResumidoDTO buscarAlunoResumidoPorId(Integer numeroMatriculaAluno) {
+		// guardando dentro de aluno os dados
+		Aluno aluno = alunoRepo.findById(numeroMatriculaAluno).orElse(null);
+
+		// na linha de baixo estamos pegando os dados do aluno, e inserindo no alunoRes
+		// estamos utulizando o set no alunoRes para inserir dados atraves do get do
+		// aluno
+
+		if (aluno != null) { // utilizamos o if para que não de erro quando o aluno for null
+			AlunoResumidoDTO alunoResDTO = new AlunoResumidoDTO( 
+					aluno.getNumeroMatriculaAluno(), 
+					aluno.getNome(),
+					aluno.getCpf());
+					//aqui acima estamos utilizando o construtor para agilizar 
+					//escolhemos o jeito de cima ou de baixo que esta comentado para utilizar
+			
+			/*
+			 * alunoResDTO.setNumeroMatriculaAluno(aluno.getNumeroMatriculaAluno());
+			 * alunoResDTO.setNome(aluno.getNome()); alunoResDTO.setCpf(aluno.getCpf());
+			 */
+			return alunoResDTO;
+
+		}
+
+		return null;
 	}
 
 	// criando metodo para salvar um novo aluno

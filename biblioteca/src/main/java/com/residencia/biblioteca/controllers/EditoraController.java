@@ -14,10 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.residencia.biblioteca.entities.Editora;
+import com.residencia.biblioteca.dto.EditoraDTO;
 import com.residencia.biblioteca.entities.Editora;
 import com.residencia.biblioteca.services.EditoraService;
-
 
 @RestController // obrigatório para dizer que é um controller
 @RequestMapping("/editoras") // é o nome da entidade (no minusculo e no plural)- caminho do http
@@ -41,15 +40,16 @@ public class EditoraController {
 	public ResponseEntity<Editora> buscarEditoraPorId(@PathVariable Integer codigoEditora) {
 		// o @PathVariable é para dizer que o parametro ID vai ser passado por path -
 		// /id
-		
+
 		Editora editora = editoraService.buscarEditoraPorId(codigoEditora);
-		
-		if(editora == null)
+
+		if (editora == null)
 			return new ResponseEntity<>(editoraService.buscarEditoraPorId(codigoEditora), HttpStatus.NOT_FOUND);
-		
+
 		else
 			return new ResponseEntity<>(editoraService.buscarEditoraPorId(codigoEditora), HttpStatus.OK);
-		//utilizamos essa estrutura para alterar o status - quando for nulo vai dar um NotFound
+		// utilizamos essa estrutura para alterar o status - quando for nulo vai dar um
+		// NotFound
 	}
 
 	@PostMapping // post é pq iremos salvar um objeto
@@ -59,13 +59,19 @@ public class EditoraController {
 		// utilizar o CREATED sempre quando fizermos um Post
 	}
 
+	@PostMapping("/dto")
+	public ResponseEntity<EditoraDTO> salvarEditoraDTO(@RequestBody EditoraDTO novaEditoraDTO) {
+		return new ResponseEntity<>(editoraService.salvarEditoraDTO(novaEditoraDTO), HttpStatus.CREATED);
+	}
+
 	@PutMapping // put é pq iremos atualizar um objeto ja criado
 	public ResponseEntity<Editora> atualizarEditora(@RequestBody Editora atualizaEditora) {
 		return new ResponseEntity<>(editoraService.atualizarEditora(atualizaEditora), HttpStatus.OK);
 	}
 
 	@DeleteMapping // delete é quando o metodo é para deletar
-	public ResponseEntity<String> deletarEditora(@RequestBody Editora deletaEditora) {// string pq vamos retornar uma frase
+	public ResponseEntity<String> deletarEditora(@RequestBody Editora deletaEditora) {// string pq vamos retornar uma
+																						// frase
 		if (editoraService.deletarEditora(deletaEditora) == true) { // chamamos fora pq temos que retornar uma string
 			return new ResponseEntity<>("Deletado com Sucesso", HttpStatus.OK); // é passado um texto pq espeara receber
 																				// uma string

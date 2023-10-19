@@ -2,15 +2,18 @@ package com.residencia.biblioteca.services;
 
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.residencia.biblioteca.entities.Editora;
+import com.residencia.biblioteca.dto.EditoraDTO;
 import com.residencia.biblioteca.entities.Editora;
 import com.residencia.biblioteca.repositories.EditoraRepository;
 
 @Service
 public class EditoraService {
+
+	private ModelMapper modelMapper = new ModelMapper();
 
 	// 5 métodos - CRUD
 	// recuperar todas Editoras
@@ -29,7 +32,7 @@ public class EditoraService {
 	// criando metodo de recuperar editora pela chave primária
 	public Editora buscarEditoraPorId(Integer codigoEditora) { // integer pq é o tipo da chave primária de Editora
 		return editoraRepo.findById(codigoEditora).orElse(null); // utilizamos o getbyid optional, depois o .get para
-																// retornar uma editora.
+																	// retornar uma editora.
 		// utilizamos o orElse, caso o numero do ID não exista, seria uma exception -
 		// entao o que tivermos dentro do orElse, irá ser passado na pesquisa quando o
 		// ID não for encontrado - - Caso o Id é encontrado, retorna o ID como se fosse
@@ -39,6 +42,26 @@ public class EditoraService {
 	// criando metodo para salvar uma nova editora
 	public Editora salvarEditora(Editora novaEditora) { // salvando uma nova editora na entidade Editora
 		return editoraRepo.save(novaEditora); // o .save ja vai salvar
+	}
+
+	// Entity to DTO
+	private EditoraDTO convertToDTO(Editora editora) {
+		EditoraDTO editoraDTO = modelMapper.map(editora, EditoraDTO.class);
+
+		return editoraDTO;
+	}
+
+	// DTO to Entity
+	private Editora convertToEditora(EditoraDTO editoraDTO) {
+		Editora editora = modelMapper.map(editoraDTO, Editora.class);
+
+		return editora;
+	}
+
+	public EditoraDTO salvarEditoraDTO(EditoraDTO novaEditoraDTO) { // salvando uma nova editora na entidade Editora
+		Editora editora = convertToEditora(novaEditoraDTO);
+		
+		return convertToDTO(editoraRepo.save(editora)); // o .save ja vai salvar
 	}
 
 	// criando metodo para atualizar uma editora existente

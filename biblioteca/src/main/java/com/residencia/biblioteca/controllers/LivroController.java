@@ -15,8 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.residencia.biblioteca.entities.Livro;
-import com.residencia.biblioteca.entities.Emprestimo;
-import com.residencia.biblioteca.entities.Livro;
+import com.residencia.biblioteca.dto.LivroResumidoDTO;
 import com.residencia.biblioteca.services.LivroService;
 
 @RestController // obrigatório para dizer que é um controller
@@ -24,7 +23,6 @@ import com.residencia.biblioteca.services.LivroService;
 
 public class LivroController {
 
-	
 	@Autowired
 	LivroService livroService; // estamos importando o service, para chamar os metodos de la
 
@@ -38,21 +36,42 @@ public class LivroController {
 		// chamando o metodo do service ao lado, com o HttpStatus que o usuario quiser
 	}
 
+	@GetMapping("/resumido")
+	public ResponseEntity<List<LivroResumidoDTO>> listarLivrosResumido() {
+
+		return new ResponseEntity<>(livroService.listarLivrosResumidos(), HttpStatus.OK);
+
+	}
+
 	@GetMapping("/{codigoLivro}") // temos que usar o {} dessa forma para diferenciar do primeiro getmapping
 	// o texto entre chaves tem que ser igual o do pathVariable
 	public ResponseEntity<Livro> buscarLivroPorId(@PathVariable Integer codigoLivro) {
 		// o @PathVariable é para dizer que o parametro ID vai ser passado por path -
 		// /id
-		
-	Livro livro = livroService.buscarLivroPorId(codigoLivro);
-	
-	if(livro == null)
-		return new ResponseEntity<>(livroService.buscarLivroPorId(codigoLivro), HttpStatus.NOT_FOUND);
-	
-	else
-		return new ResponseEntity<>(livroService.buscarLivroPorId(codigoLivro), HttpStatus.OK);
 
-	//utilizamos essa estrutura para alterar o status - quando for nulo vai dar um NotFound
+		Livro livro = livroService.buscarLivroPorId(codigoLivro);
+
+		if (livro == null)
+			return new ResponseEntity<>(livroService.buscarLivroPorId(codigoLivro), HttpStatus.NOT_FOUND);
+
+		else
+			return new ResponseEntity<>(livroService.buscarLivroPorId(codigoLivro), HttpStatus.OK);
+
+		// utilizamos essa estrutura para alterar o status - quando for nulo vai dar um
+		// NotFound
+	}
+
+	// metodo DTO
+	@GetMapping("/resumido/{codigoLivro}")
+	public ResponseEntity<LivroResumidoDTO> buscarLivroResumidoPorId(@PathVariable Integer codigoLivro) {
+
+		LivroResumidoDTO livroResDTO = livroService.buscarLivroResumidoPorId(codigoLivro);
+
+		if (livroResDTO == null)
+			return new ResponseEntity<>(livroResDTO, HttpStatus.NOT_FOUND);
+
+		else
+			return new ResponseEntity<>(livroResDTO, HttpStatus.OK);
 	}
 
 	@PostMapping // post é pq iremos salvar um objeto
